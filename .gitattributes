@@ -1,7 +1,10 @@
 # Keep indexed reference text files byte-stable across platforms.
 # FASTA indexes (.fai) store line widths, so CRLF conversion invalidates them.
+.gitattributes text eol=lf
 *.yml text eol=lf
 *.yaml text eol=lf
+*.md text eol=lf
+*.gitignore text eol=lf
 *.fa text eol=lf
 *.fasta text eol=lf
 *.fna text eol=lf

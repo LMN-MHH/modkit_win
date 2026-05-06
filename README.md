@@ -109,6 +109,12 @@ The release executable will be:
 target\x86_64-pc-windows-gnu\release\modkit.exe
 ```
 
+### Runtime dependency
+
+The Windows GNU build currently depends on the MSYS2 UCRT64 `libsystre-0.dll`
+runtime library. To run `modkit.exe`, either keep `C:\msys64\ucrt64\bin` on
+`PATH` or distribute `libsystre-0.dll` alongside `modkit.exe`.
+
 ## Test
 
 Run the full test suite with the same environment:
@@ -142,4 +148,4 @@ https://nanoporetech.github.io/modkit/
 
 ## License
 
-This fork preserves the upstream license notices for modkit. Modifications to the upstream modkit code in this fork are distributed under the same Oxford Nanopore Technologies Public License v1.0. Third-party components remain under their respective licenses. 
+This fork preserves the upstream license notices for modkit. Modifications to the upstream modkit code in this fork are distributed under the same Oxford Nanopore Technologies Public License v1.0. Third-party components remain under their respective licenses.

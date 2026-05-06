@@ -23,6 +23,7 @@ artifacts
 artifacts/
 venv
 venv/
+test/
 
 # Local build/test diagnostics
 *.log
