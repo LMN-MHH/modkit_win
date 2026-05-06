@@ -1,14 +1,29 @@
 # modkit_win
 
-This is a private Windows-oriented fork of Oxford Nanopore Technologies'
-`modkit`.
+This is a 64-bit Windows (`x86_64`) oriented fork of Oxford Nanopore
+Technologies' `modkit`.
 
 The official project, documentation, releases, and issue tracker remain at:
 
 https://github.com/nanoporetech/modkit
 
 This fork is only intended to record the local changes needed to compile and run
-`modkit` on Windows. It should not be treated as an upstream replacement.
+`modkit` natively on 64-bit Windows (`x86_64`). It should not be treated as an
+upstream replacement.
+
+## Why?
+
+For most users on 64-bit Windows, **WSL is the right solution**. Microsoft
+positions WSL as the standard way to run Linux command-line tools on Windows. If WSL is available in
+your environment, it is usually the simplest and most compatible way to use `modkit`.
+
+This fork exists for the narrower cases where WSL is inconvenient or not
+practical: managed institutional systems where virtualization or required services
+are restricted, nested-virtualization setups, offline or tightly controlled
+workstations, or environments where adding a Linux distribution creates extra
+installation and support overhead. In those cases, a native 64-bit Windows
+build can be easier to distribute, integrate, and run from existing Windows
+tooling.
 
 ## What Changed
 
@@ -127,7 +142,4 @@ https://nanoporetech.github.io/modkit/
 
 ## License
 
-This fork preserves the upstream license and copyright.
-
-Modkit is distributed under the terms of the Oxford Nanopore Technologies, Ltd.
-Public License, v. 1.0. See `LICENCE.txt`.
+This fork preserves the upstream license notices for modkit. Modifications to the upstream modkit code in this fork are distributed under the same Oxford Nanopore Technologies Public License v1.0. Third-party components remain under their respective licenses.
