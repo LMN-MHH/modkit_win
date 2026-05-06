@@ -14,7 +14,9 @@ mod_kit = { path = "../modkit-core" }
 modkit-logging = { path = "../modkit-logging" }
 ochm = { path = "../ochm" }
 rayon = "1.8.0"
-rust-htslib = "0.46.0"
+# default-features disabled to drop `curl` (pulls in openssl-sys which panics on Windows).
+# `bindgen` regenerates FFI types for the current target instead of using Linux pre-builts.
+rust-htslib = { version = "0.46.0", default-features = false, features = ["bzip2", "lzma"] }
 rustc-hash = "1.1.0"
 
 [dev-dependencies]

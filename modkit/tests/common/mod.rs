@@ -129,11 +129,46 @@ pub fn check_against_expected_text_file(output_fp: &str, expected_fp: &str) {
         buff
     };
 
-    similar_asserts::assert_eq!(
-        test,
-        expected,
-        "{output_fp} is not the same as {expected_fp}"
-    );
+    let test_norm = test.replace("\r\n", "\n");
+    let expected_norm = expected.replace("\r\n", "\n");
+
+    if test_norm == expected_norm {
+        return;
+    }
+
+    // Some regression outputs include floating-point summaries that can differ
+    // at the last decimal place across targets/toolchains.
+    let float_tolerance = 1e-12_f64;
+    let test_lines: Vec<&str> = test_norm.lines().collect();
+    let expected_lines: Vec<&str> = expected_norm.lines().collect();
+    let approx_equal = test_lines.len() == expected_lines.len()
+        && test_lines
+            .iter()
+            .zip(expected_lines.iter())
+            .all(|(a_line, b_line)| {
+                let a_parts: Vec<&str> = a_line.split('\t').collect();
+                let b_parts: Vec<&str> = b_line.split('\t').collect();
+                a_parts.len() == b_parts.len()
+                    && a_parts.iter().zip(b_parts.iter()).all(|(a, b)| {
+                        if a == b {
+                            return true;
+                        }
+                        match (a.parse::<f64>(), b.parse::<f64>()) {
+                            (Ok(af), Ok(bf)) => {
+                                (af - bf).abs() <= float_tolerance
+                            }
+                            _ => false,
+                        }
+                    })
+            });
+
+    if !approx_equal {
+        similar_asserts::assert_eq!(
+            test_norm,
+            expected_norm,
+            "{output_fp} is not the same as {expected_fp}"
+        );
+    }
 }
 
 #[derive(Deserialize)]

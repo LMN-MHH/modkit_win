@@ -145,7 +145,7 @@ fn test_extract_correct_output_with_ref() {
         "25",
         "--force",
         "--ref",
-        "../tests/resources/CGI_ladder_3.6kb_ref.fa",
+        "../tests/resources/CGI_ladder_3.6kb_ref.fa.gz",
     ])
     .unwrap();
 
@@ -470,7 +470,7 @@ fn test_extract_implicit_mod_calls() {
 fn test_extract_cpg_motif() {
     let extract_tsv =
         std::env::temp_dir().join("test_extract_cpg_motif_extract.tsv");
-    let reference_fasta_fp = "../tests/resources/CGI_ladder_3.6kb_ref.fa";
+    let reference_fasta_fp = "../tests/resources/CGI_ladder_3.6kb_ref.fa.gz";
     let cpg_positions = parse_bed_file(
         &Path::new("../tests/resources/CGI_ladder_3.6kb_ref_CG.bed")
             .to_path_buf(),
@@ -534,7 +534,7 @@ fn test_extract_calls_regression() {
         "../tests/resources/2_reads_all_context.bam",
         extract_tsv.to_str().unwrap(),
         "--ref",
-        "../tests/resources/CGI_ladder_3.6kb_ref.fa",
+        "../tests/resources/CGI_ladder_3.6kb_ref.fa.gz",
         "--force",
     ])
     .unwrap();

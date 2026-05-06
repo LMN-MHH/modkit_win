@@ -7,7 +7,9 @@ edition = "2021"
 [dependencies]
 libc = "0.2.150"
 rayon = "1.8.0"
-rust-htslib = "0.46.0"
+# default-features disabled to drop `curl` (pulls in openssl-sys on Windows).
+# `bindgen` regenerates FFI types for the current target instead of Linux pre-builts.
+rust-htslib = { version = "0.46.0", default-features = false, features = ["bzip2", "lzma"] }
 
 [dev-dependencies]
 anyhow = "1.0.68"

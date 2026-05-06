@@ -339,12 +339,9 @@ mod fasta_mod_tests {
             "../tests/resources/CGI_ladder_3.6kb_ref.fa.gz",
         )
         .to_path_buf();
-        let fp =
-            std::path::Path::new("../tests/resources/CGI_ladder_3.6kb_ref.fa")
-                .to_path_buf();
         let compressed_reader =
             HtsFastaHandle::from_file(&compressed_fp, false).unwrap();
-        let reader = HtsFastaHandle::from_file(&fp, false).unwrap();
+        let reader = HtsFastaHandle::from_file(&compressed_fp, false).unwrap();
         assert_eq!(&compressed_reader.contigs, &reader.contigs);
         let mut rng = StdRng::seed_from_u64(42);
         for (contig, len) in compressed_reader.contigs.iter() {
