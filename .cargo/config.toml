@@ -1,0 +1,7 @@
+[target.x86_64-pc-windows-gnu]
+linker = "C:/msys64/ucrt64/bin/x86_64-w64-mingw32-gcc.exe"
+ar = "C:/msys64/ucrt64/bin/x86_64-w64-mingw32-gcc-ar.exe"
+# htslib links against Windows sockets (ws2_32), crypto (bcrypt), user
+# environment (userenv), and POSIX regex (systre). MinGW64 may not pull these in
+# automatically for this dependency graph.
+rustflags = ["-C", "link-args=-lws2_32 -lbcrypt -luserenv -lsystre"]

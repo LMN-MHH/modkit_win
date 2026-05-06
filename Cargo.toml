@@ -1,3 +1,10 @@
 [workspace]
 resolver = "2"
 members = ["modkit", "modkit-core", "modkit-logging", "ochm"]
+
+# Patch hts-sys with the open Windows port PR (rust-bio/hts-sys#34).
+# Adds: POSIX compat headers, drand48 shim, sh-wrapped configure, and
+# Windows prebuilt bindings. Can be removed once merged upstream.
+[patch.crates-io]
+hts-sys = { git = "https://github.com/theAeon/hts-sys", branch = "hts-win" }
+rust-htslib = { path = "vendor/rust-htslib" }

@@ -665,7 +665,7 @@ mod interval_chunks_tests {
 
     #[test]
     fn test_check_sequence_slicing_is_same_as_fetch() {
-        let fasta_fp = "../tests/resources/CGI_ladder_3.6kb_ref.fa";
+        let fasta_fp = "../tests/resources/CGI_ladder_3.6kb_ref.fa.gz";
         let fasta_reader = faidx::Reader::from_path(fasta_fp).unwrap();
         let name = "oligo_1512_adapters";
         let dna = load_test_sequence(name);

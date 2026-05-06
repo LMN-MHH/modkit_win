@@ -242,7 +242,7 @@ fn test_pileup_cpg_motif_filtering() {
         "5mC",
         "5hmC",
         "--ref",
-        "../tests/resources/CGI_ladder_3.6kb_ref.fa",
+        "../tests/resources/CGI_ladder_3.6kb_ref.fa.gz",
     ])
     .unwrap();
     check_against_expected_text_file(
@@ -294,7 +294,7 @@ fn test_pileup_cpg_motif_filtering_strand_combine() {
             "5mC",
             "5hmC",
             "--ref",
-            "../tests/resources/CGI_ladder_3.6kb_ref.fa",
+            "../tests/resources/CGI_ladder_3.6kb_ref.fa.gz",
         ])
         .unwrap();
         check_against_expected_text_file(
@@ -322,7 +322,7 @@ fn test_pileup_presets_traditional_same_as_options() {
         "--preset",
         "traditional",
         "--ref",
-        "../tests/resources/CGI_ladder_3.6kb_ref.fa",
+        "../tests/resources/CGI_ladder_3.6kb_ref.fa.gz",
     ])
     .unwrap();
 
@@ -337,7 +337,7 @@ fn test_pileup_presets_traditional_same_as_options() {
         "h",
         "--combine-strands",
         "--ref",
-        "../tests/resources/CGI_ladder_3.6kb_ref.fa",
+        "../tests/resources/CGI_ladder_3.6kb_ref.fa.gz",
     ])
     .unwrap();
     check_against_expected_text_file(
@@ -460,7 +460,7 @@ fn test_pileup_edge_filter_asymmetric_regression() {
         "5mC",
         "5hmC",
         "--ref",
-        "../tests/resources/CGI_ladder_3.6kb_ref.fa",
+        "../tests/resources/CGI_ladder_3.6kb_ref.fa.gz",
         "--edge-filter",
         "50,50",
     ])
@@ -483,7 +483,7 @@ fn test_pileup_edge_filter_asymmetric_regression() {
         "5mC",
         "5hmC",
         "--ref",
-        "../tests/resources/CGI_ladder_3.6kb_ref.fa",
+        "../tests/resources/CGI_ladder_3.6kb_ref.fa.gz",
         "--edge-filter",
         "50,0",
     ])
@@ -686,7 +686,7 @@ fn test_pileup_with_filt_position_filter() {
         "5mC",
         "5hmC",
         "--ref",
-        "../tests/resources/CGI_ladder_3.6kb_ref.fa",
+        "../tests/resources/CGI_ladder_3.6kb_ref.fa.gz",
         "--include-positions",
         "../tests/resources/CGI_ladder_3.6kb_ref_include_positions.bed",
         "../tests/resources/bc_anchored_10_reads.sorted.bam",
@@ -709,7 +709,7 @@ fn test_pileup_with_filt_position_filter() {
         "5mC",
         "5hmC",
         "--ref",
-        "../tests/resources/CGI_ladder_3.6kb_ref.fa",
+        "../tests/resources/CGI_ladder_3.6kb_ref.fa.gz",
         "--include-positions",
         "../tests/resources/CGI_ladder_3.6kb_ref_include_positions.bed",
         "../tests/resources/bc_anchored_10_reads.sorted.bam",
@@ -738,7 +738,7 @@ fn test_pileup_with_filter_positions_and_traditional() {
         "--preset",
         "traditional",
         "--ref",
-        "../tests/resources/CGI_ladder_3.6kb_ref.fa",
+        "../tests/resources/CGI_ladder_3.6kb_ref.fa.gz",
         "--include-positions",
         "../tests/resources/CGI_ladder_3.6kb_ref_include_positions.bed",
         "../tests/resources/bc_anchored_10_reads.sorted.bam",
@@ -766,7 +766,7 @@ fn test_pileup_partition_tags_combine_strands() {
         control_file.to_str().unwrap(),
         "--combine-strands",
         "--ref",
-        "../tests/resources/CGI_ladder_3.6kb_ref.fa",
+        "../tests/resources/CGI_ladder_3.6kb_ref.fa.gz",
         "--cpg",
         "--no-filtering",
     ])
@@ -782,7 +782,7 @@ fn test_pileup_partition_tags_combine_strands() {
         "HP",
         "--combine-strands",
         "--ref",
-        "../tests/resources/CGI_ladder_3.6kb_ref.fa",
+        "../tests/resources/CGI_ladder_3.6kb_ref.fa.gz",
         "--cpg",
         "--no-filtering",
     ])
@@ -811,7 +811,7 @@ fn test_pileup_motifs_cg0_cgcg2() {
         "--motif", "CG", "0",
         "--motif", "CGCG", "2",
         "--no-filtering",
-        "--ref", "../tests/resources/CGI_ladder_3.6kb_ref.fa",
+        "--ref", "../tests/resources/CGI_ladder_3.6kb_ref.fa.gz",
         "--region", "oligo_741_adapters:22-62",
     ])
         .unwrap();
@@ -828,7 +828,7 @@ fn test_pileup_motifs_cg0_cgcg2() {
         "--motif", "CG", "0",
         "--motif", "CGCG", "2",
         "--no-filtering",
-        "--ref", "../tests/resources/CGI_ladder_3.6kb_ref.fa",
+        "--ref", "../tests/resources/CGI_ladder_3.6kb_ref.fa.gz",
         "--region", "oligo_741_adapters:22-62",
     ])
         .unwrap();
@@ -852,7 +852,7 @@ fn test_pileup_motifs_cg0_cgcg2_combined() {
         "--motif", "CGCG", "2",
         "--no-filtering",
         "--combine-strands",
-        "--ref", "../tests/resources/CGI_ladder_3.6kb_ref.fa",
+        "--ref", "../tests/resources/CGI_ladder_3.6kb_ref.fa.gz",
         "--region", "oligo_741_adapters:22-62",
     ])
         .unwrap();
@@ -870,7 +870,7 @@ fn test_pileup_motifs_cg0_cgcg2_combined() {
         "--motif", "CGCG", "2",
         "--no-filtering",
         "--combine-strands",
-        "--ref", "../tests/resources/CGI_ladder_3.6kb_ref.fa",
+        "--ref", "../tests/resources/CGI_ladder_3.6kb_ref.fa.gz",
         "--region", "oligo_741_adapters:22-62",
     ])
         .unwrap();
@@ -960,7 +960,7 @@ fn test_pileup_chebi_code_same_output() {
 
 #[test]
 fn test_pileup_with_header() {
-    let temp_file = std::env::temp_dir().join("test_pileup_nofilt.bed");
+    let temp_file = std::env::temp_dir().join("test_pileup_with_header.bed");
     let args = [
         "pileup",
         "-i",

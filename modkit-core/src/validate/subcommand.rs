@@ -3,7 +3,7 @@ use std::collections::{BTreeMap, HashMap, HashSet};
 use std::fmt::{Debug, Display, Formatter};
 use std::fs::File;
 use std::io::{BufRead, BufReader, Write};
-use std::path::PathBuf;
+use std::path::{Path, PathBuf};
 use std::string::FromUtf8Error;
 
 use ansi_term::Style;
@@ -896,6 +896,18 @@ pub struct ValidateFromModBam {
 }
 
 impl ValidateFromModBam {
+    fn resolve_input_path(path: &Path, kind: &str) -> anyhow::Result<PathBuf> {
+        match path.canonicalize() {
+            Ok(path) => Ok(path),
+            Err(_err) if path.exists() => Ok(path.to_path_buf()),
+            Err(err) => Err(anyhow!(
+                "Cannot resolve {kind} path, {}: {}",
+                path.display(),
+                err
+            )),
+        }
+    }
+
     pub fn run(&self) -> anyhow::Result<()> {
         let _handle = init_logging(self.log_filepath.as_ref());
         let mut out_handle: Option<File> = None;
@@ -925,31 +937,19 @@ impl ValidateFromModBam {
         let mut bam_path_to_bed_indices: HashMap<PathBuf, Vec<usize>> =
             HashMap::new();
         for bam_and_bed in self.bam_and_bed.chunks(2) {
-            let bam_path = &bam_and_bed[0].canonicalize().map_err(|e| {
-                anyhow::anyhow!(
-                    "Cannot resolve BAM path, {}: {}",
-                    bam_and_bed[0].display(),
-                    e
-                )
-            })?;
-            let bed_path = &bam_and_bed[1].canonicalize().map_err(|e| {
-                anyhow::anyhow!(
-                    "Cannot resolve BED path, {}: {}",
-                    bam_and_bed[1].display(),
-                    e
-                )
-            })?;
+            let bam_path = Self::resolve_input_path(&bam_and_bed[0], "BAM")?;
+            let bed_path = Self::resolve_input_path(&bam_and_bed[1], "BED")?;
 
             let bed_idx = if let Some(bed_idx) =
-                bed_paths.iter().position(|s| s == bed_path)
+                bed_paths.iter().position(|s| s == &bed_path)
             {
                 bed_idx
             } else {
-                bed_paths.push(bed_path.to_path_buf());
+                bed_paths.push(bed_path);
                 bed_paths.len() - 1
             };
             bam_path_to_bed_indices
-                .entry(bam_path.clone())
+                .entry(bam_path)
                 .or_insert_with(Vec::new)
                 .push(bed_idx);
         }
