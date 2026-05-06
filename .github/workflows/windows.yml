@@ -11,6 +11,7 @@ env:
   CARGO_TERM_COLOR: always
   CC_x86_64_pc_windows_gnu: x86_64-w64-mingw32-gcc.exe
   AR_x86_64_pc_windows_gnu: x86_64-w64-mingw32-gcc-ar.exe
+  CARGO_TARGET_X86_64_PC_WINDOWS_GNU_LINKER: x86_64-w64-mingw32-gcc.exe
 
 jobs:
   build-windows:
@@ -21,6 +22,7 @@ jobs:
 
       # Install the UCRT64 C toolchain and htslib's C dependencies via MSYS2
       - name: Set up MSYS2 with UCRT64 dependencies
+        id: msys2
         uses: msys2/setup-msys2@v2
         with:
           msystem: UCRT64
@@ -35,12 +37,27 @@ jobs:
             mingw-w64-ucrt-x86_64-pkg-config
             mingw-w64-ucrt-x86_64-libsystre
 
-      # Make UCRT64 tools (gcc, cmake, pkg-config) visible to cargo's build scripts
-      - name: Add UCRT64 bin to PATH
+      - name: Configure MSYS2 paths
         shell: pwsh
         run: |
-          "C:\msys64\usr\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
-          "C:\msys64\ucrt64\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+          $msys2Root = "${{ steps.msys2.outputs.msys2-location }}"
+          $ucrtPrefix = Join-Path $msys2Root "ucrt64"
+          $ucrtPrefixUnix = $ucrtPrefix.Replace("\", "/")
+
+          "$msys2Root\usr\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+          "$ucrtPrefix\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+          "PKG_CONFIG_PATH=$ucrtPrefix\lib\pkgconfig" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          "LIBCLANG_PATH=$ucrtPrefix\bin" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+          "CFLAGS_x86_64_pc_windows_gnu=-I$ucrtPrefixUnix/include" | Out-File -FilePath $env:GITHUB_ENV -Encoding utf8 -Append
+
+      - name: Verify MSYS2 toolchain
+        shell: pwsh
+        run: |
+          where.exe x86_64-w64-mingw32-gcc.exe
+          x86_64-w64-mingw32-gcc.exe -v
+          if (-not (Test-Path "$env:LIBCLANG_PATH\..\include\regex.h")) {
+            throw "regex.h was not found in the UCRT64 include directory"
+          }
 
       # Install the pinned Rust toolchain with the Windows GNU target
       - name: Install Rust toolchain
@@ -64,25 +81,20 @@ jobs:
       - name: Build
         shell: pwsh
         env:
-          PKG_CONFIG_PATH: C:\msys64\ucrt64\lib\pkgconfig
           PKG_CONFIG_ALLOW_CROSS: "1"
           # Force static linking of C deps so the .exe has no UCRT64 DLL runtime dependency
           LIBZ_SYS_STATIC: "1"
           BZIP2_SYS_STATIC: "1"
           LZMA_SYS_STATIC: "1"
-          # bindgen requires libclang to parse C headers at build time
-          LIBCLANG_PATH: C:\msys64\ucrt64\bin
         run: cargo build --release --target x86_64-pc-windows-gnu
 
       - name: Test
         shell: pwsh
         env:
-          PKG_CONFIG_PATH: C:\msys64\ucrt64\lib\pkgconfig
           PKG_CONFIG_ALLOW_CROSS: "1"
           LIBZ_SYS_STATIC: "1"
           BZIP2_SYS_STATIC: "1"
           LZMA_SYS_STATIC: "1"
-          LIBCLANG_PATH: C:\msys64\ucrt64\bin
         run: cargo test --target x86_64-pc-windows-gnu
 
       - name: Upload modkit.exe
