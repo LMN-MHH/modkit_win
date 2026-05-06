@@ -142,4 +142,4 @@ https://nanoporetech.github.io/modkit/
 
 ## License
 
-This fork preserves the upstream license notices for modkit. Modifications to the upstream modkit code in this fork are distributed under the same Oxford Nanopore Technologies Public License v1.0. Third-party components remain under their respective licenses.
+This fork preserves the upstream license notices for modkit. Modifications to the upstream modkit code in this fork are distributed under the same Oxford Nanopore Technologies Public License v1.0. Third-party components remain under their respective licenses. 
