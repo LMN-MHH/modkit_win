@@ -2,9 +2,9 @@ name: Windows Build
 
 on:
   push:
-    branches: ["master"]
+    branches: ["main"]
   pull_request:
-    branches: ["master"]
+    branches: ["main"]
   workflow_dispatch:
 
 env:
@@ -17,28 +17,28 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Install MinGW64 C toolchain and htslib's C dependencies via MSYS2
-      - name: Set up MSYS2 with MinGW64 dependencies
+      # Install the UCRT64 C toolchain and htslib's C dependencies via MSYS2
+      - name: Set up MSYS2 with UCRT64 dependencies
         uses: msys2/setup-msys2@v2
         with:
-          msystem: MINGW64
+          msystem: UCRT64
           update: true
           install: >-
-            mingw-w64-x86_64-cmake
-            mingw-w64-x86_64-gcc
-            mingw-w64-x86_64-clang
-            mingw-w64-x86_64-zlib
-            mingw-w64-x86_64-bzip2
-            mingw-w64-x86_64-xz
-            mingw-w64-x86_64-curl-winssl
-            mingw-w64-x86_64-pkg-config
+            mingw-w64-ucrt-x86_64-cmake
+            mingw-w64-ucrt-x86_64-gcc
+            mingw-w64-ucrt-x86_64-clang
+            mingw-w64-ucrt-x86_64-zlib
+            mingw-w64-ucrt-x86_64-bzip2
+            mingw-w64-ucrt-x86_64-xz
+            mingw-w64-ucrt-x86_64-pkg-config
+            mingw-w64-ucrt-x86_64-libsystre
 
-      # Make MinGW64 tools (gcc, cmake, pkg-config) visible to cargo's build scripts
-      - name: Add MinGW64 bin to PATH
+      # Make UCRT64 tools (gcc, cmake, pkg-config) visible to cargo's build scripts
+      - name: Add UCRT64 bin to PATH
         shell: pwsh
         run: |
           "C:\msys64\usr\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
-          "C:\msys64\mingw64\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
+          "C:\msys64\ucrt64\bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
 
       # Install the pinned Rust toolchain with the Windows GNU target
       - name: Install Rust toolchain
@@ -62,25 +62,25 @@ jobs:
       - name: Build
         shell: pwsh
         env:
-          PKG_CONFIG_PATH: C:\msys64\mingw64\lib\pkgconfig
+          PKG_CONFIG_PATH: C:\msys64\ucrt64\lib\pkgconfig
           PKG_CONFIG_ALLOW_CROSS: "1"
-          # Force static linking of C deps so the .exe has no MinGW64 DLL runtime dependency
+          # Force static linking of C deps so the .exe has no UCRT64 DLL runtime dependency
           LIBZ_SYS_STATIC: "1"
           BZIP2_SYS_STATIC: "1"
           LZMA_SYS_STATIC: "1"
           # bindgen requires libclang to parse C headers at build time
-          LIBCLANG_PATH: C:\msys64\mingw64\bin
+          LIBCLANG_PATH: C:\msys64\ucrt64\bin
         run: cargo build --release --target x86_64-pc-windows-gnu
 
       - name: Test
         shell: pwsh
         env:
-          PKG_CONFIG_PATH: C:\msys64\mingw64\lib\pkgconfig
+          PKG_CONFIG_PATH: C:\msys64\ucrt64\lib\pkgconfig
           PKG_CONFIG_ALLOW_CROSS: "1"
           LIBZ_SYS_STATIC: "1"
           BZIP2_SYS_STATIC: "1"
           LZMA_SYS_STATIC: "1"
-          LIBCLANG_PATH: C:\msys64\mingw64\bin
+          LIBCLANG_PATH: C:\msys64\ucrt64\bin
         run: cargo test --target x86_64-pc-windows-gnu
 
       - name: Upload modkit.exe
