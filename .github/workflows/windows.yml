@@ -20,6 +20,20 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Verify indexed reference checkout
+        shell: pwsh
+        run: |
+          $eol = git ls-files --eol `
+            tests/resources/GRCh38_chr20.fa `
+            tests/resources/GRCh38_chr20.fa.fai `
+            tests/resources/genome_for_phased_test.fasta `
+            tests/resources/genome_for_phased_test.fasta.fai
+          $eol
+
+          if ($eol -match "w/crlf|w/mixed") {
+            throw "Indexed FASTA fixtures must be checked out with LF endings; CRLF invalidates .fai offsets."
+          }
+
       # Install the UCRT64 C toolchain and htslib's C dependencies via MSYS2
       - name: Set up MSYS2 with UCRT64 dependencies
         id: msys2

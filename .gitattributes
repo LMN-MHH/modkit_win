@@ -1,0 +1,25 @@
+# Keep indexed reference text files byte-stable across platforms.
+# FASTA indexes (.fai) store line widths, so CRLF conversion invalidates them.
+*.yml text eol=lf
+*.yaml text eol=lf
+*.fa text eol=lf
+*.fasta text eol=lf
+*.fna text eol=lf
+*.fai text eol=lf
+
+# Test/reference tabular fixtures should also compare consistently.
+*.bed text eol=lf
+*.bg text eol=lf
+*.sam text eol=lf
+*.tsv text eol=lf
+*.txt text eol=lf
+
+# Sequencing data, indexes, and compressed fixtures are binary artifacts.
+*.bam binary
+*.bai binary
+*.bcf binary
+*.cram binary
+*.crai binary
+*.gz binary
+*.gzi binary
+*.tbi binary
