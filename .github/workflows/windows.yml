@@ -9,9 +9,8 @@ on:
 
 env:
   CARGO_TERM_COLOR: always
-  CC_x86_64_pc_windows_gnu: C:\msys64\ucrt64\bin\x86_64-w64-mingw32-gcc.exe
-  AR_x86_64_pc_windows_gnu: C:\msys64\ucrt64\bin\x86_64-w64-mingw32-gcc-ar.exe
-  CFLAGS_x86_64_pc_windows_gnu: -IC:/msys64/ucrt64/include
+  CC_x86_64_pc_windows_gnu: x86_64-w64-mingw32-gcc.exe
+  AR_x86_64_pc_windows_gnu: x86_64-w64-mingw32-gcc-ar.exe
 
 jobs:
   build-windows:
