@@ -24,6 +24,7 @@ artifacts/
 venv
 venv/
 test/
+release_package/
 
 # Local build/test diagnostics
 *.log

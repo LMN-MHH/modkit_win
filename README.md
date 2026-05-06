@@ -111,9 +111,20 @@ target\x86_64-pc-windows-gnu\release\modkit.exe
 
 ### Runtime dependency
 
-The Windows GNU build currently depends on the MSYS2 UCRT64 `libsystre-0.dll`
-runtime library. To run `modkit.exe`, either keep `C:\msys64\ucrt64\bin` on
-`PATH` or distribute `libsystre-0.dll` alongside `modkit.exe`.
+The Windows GNU build currently depends on MSYS2 UCRT64 runtime DLLs. To run
+`modkit.exe`, either keep `C:\msys64\ucrt64\bin` on `PATH` or distribute the
+needed DLLs alongside `modkit.exe`.
+
+For the current build, the redistributable runtime set is:
+
+- `libsystre-0.dll`
+- `libtre-5.dll`
+- `libintl-8.dll`
+- `libiconv-2.dll`
+
+If publishing a GitHub Release bundle, include `LICENCE.txt`, the relevant
+third-party license notices for the bundled DLLs, and a link to the source tag
+or commit used to produce the executable.
 
 ## Test
 
