@@ -22,6 +22,40 @@ cargo install --path modkit
 cargo install --git https://github.com/nanoporetech/modkit.git
 ```
 
+### Windows (x86_64)
+
+This fork carries the changes needed to build `modkit` natively on 64-bit
+Windows. Install Rust 1.90.0 and the `x86_64-pc-windows-gnu` target, then use
+the MSYS2 UCRT64 toolchain and dependencies:
+
+```bash
+pacman -S --needed \
+  mingw-w64-ucrt-x86_64-gcc \
+  mingw-w64-ucrt-x86_64-cmake \
+  mingw-w64-ucrt-x86_64-pkg-config \
+  mingw-w64-ucrt-x86_64-zlib \
+  mingw-w64-ucrt-x86_64-bzip2 \
+  mingw-w64-ucrt-x86_64-xz \
+  mingw-w64-ucrt-x86_64-libsystre
+```
+
+From PowerShell at the repository root:
+
+```powershell
+$env:Path = "C:\msys64\usr\bin;C:\msys64\ucrt64\bin;$env:Path"
+$env:PKG_CONFIG_PATH = "C:\msys64\ucrt64\lib\pkgconfig"
+$env:PKG_CONFIG_ALLOW_CROSS = "1"
+$env:LIBZ_SYS_STATIC = "1"
+$env:BZIP2_SYS_STATIC = "1"
+$env:LZMA_SYS_STATIC = "1"
+cargo build --release --target x86_64-pc-windows-gnu
+```
+
+The executable is written to
+`target\x86_64-pc-windows-gnu\release\modkit.exe`. It requires the MSYS2
+UCRT64 runtime DLLs, including `libsystre-0.dll`, to be on `PATH` or alongside
+the executable.
+
 ### macOS (Apple Silicon) with acceleration for `open-chromatin predict`
 
 A script is provided to compile modkit on Apple Silicon Macs with Metal GPU (MPS) acceleration.
